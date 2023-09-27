@@ -230,6 +230,7 @@ def train_local(dataset_path: str,
         model_id: str,
         lr: float,
         epochs: int,
+        batch_size: int,
         use_wandb: bool,
         save_step: int = None,):
     if save_step==0:
@@ -244,6 +245,7 @@ def train_local(dataset_path: str,
         model_id=model_id,
         lr=lr,
         epochs=int(epochs),
+        batch_size=int(batch_size),
         use_wandb=wandb,
         save_step=save_step,
     )
@@ -349,12 +351,13 @@ with gr.Blocks(analytics_enabled=False) as demo:
             with gr.Column():
                 lr =  gr.Number(label="Learning rate", value=0.0001, interactive=True)
                 epochs = gr.Number(label="Epoch count", value=5, interactive=True)
+                batch_size = gr.Number(label="Batch size", value=1, interactive=True)
                 use_wandb = gr.Checkbox(label="Use WanDB", value=False, interactive=True)
                 save_step = gr.Number(label="Number of steps after which to save a checkpoint. 0 is treated as none.", value=0, interactive=True)
         with gr.Row():
             model_id = gr.Radio(["small", "medium", "large"], label="Model", value="small", interactive=True)
         train_button = gr.Button(label="Start training")
-        train_button.click(train_local, inputs=[dataset_path,model_id, lr, epochs, use_wandb, save_step], outputs=[output])
+        train_button.click(train_local, inputs=[dataset_path,model_id, lr, epochs, batch_size, use_wandb, save_step], outputs=[output])
         gr.Markdown(
             """
             # Training
@@ -372,6 +375,7 @@ with gr.Blocks(analytics_enabled=False) as demo:
             - `model_id - MusicGen model to use. Can be `small`/`medium`/`large`. Default: `small` - model it will be finetuned on
             - `lr`: Float, learning rate. Default: `0.0001`/`1e-4`
             - `epochs`: Integer, epoch count. Default: `5`
+            - `batch_size`: Integer, batch size. Default: `1`
             - `use_wandb`: Integer, `1` to enable wandb, `0` to disable it. Default: `0` = Disabled
             - `save_step`: Integer, amount of steps to save a checkpoint. Default: None
 
